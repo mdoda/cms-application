@@ -5,7 +5,7 @@ export class Contact{
    public email:    string;
    public phone:    string;
    public imageUrl: string;
-   group: Contact [] = [];
+   group: Contact [] = []; // ndrro
 
    constructor(id: number, name: string, email: string, phone: string, imageUrl: string, group: Contact[]){
     this.id       = id;
@@ -13,6 +13,6 @@ export class Contact{
     this.email    = email;
     this.phone    = phone;
     this.imageUrl = imageUrl;
-    this.group    = group;   
+    this.group    = group;
    }
 }

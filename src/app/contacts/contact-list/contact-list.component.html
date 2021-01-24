@@ -4,32 +4,48 @@
   </div> -->
 
 <div class="panel panel-default">
-    <div class="row">
-        <div class="col-xs-12">
-            <!-- <div class="list-group-item clearfix"> -->
-            <div class="panel-heading" style="background-color: rgba(204, 203, 203, 0.945);">
-                <div class="clearfix">
-                    <div class="pull-left">
-                        <h2 class="list-group-item-heading">Contacts</h2>
-                    </div>
-                    <button class="btn btn-success pull-right">New Contact</button>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <!-- <div class="list-group-item clearfix"> -->
+      <div class="panel-heading" style="background-color: rgba(204, 203, 203, 0.945);">
+        <div class="clearfix">
+          <div class="pull-left">
+            <h2 class="list-group-item-heading">Contacts</h2>
+          </div>
+          <button class="btn btn-success pull-right">New Contact</button>
         </div>
+      </div>
     </div>
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="panel-body">
-                <a href="#" class="list-group-item clearfix" *ngFor="let contact of contacts">
-                    <div class="pull-left">
-                        <h4 class="list-group-item-heading">{{contact.name}}</h4>
-                    </div>
-                    <span class="pull-right">
-                        <img [src]="contact.imageUrl" alt="{{contact.name}}" class="img-responsive"
-                            style="max-height: 50px;">
-                    </span>
-                </a>
-            </div>
-        </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel-body">
+        <cms-contact-item
+          *ngFor="let singleContact of contacts"
+          [contact]="singleContact"
+          (click)="onSelected(singleContact)"></cms-contact-item>
+      </div>
     </div>
+  </div>
 </div>
+
+<!-- <div class="row">
+  <div class="panel panel-default">
+    <div class="col-xs-12  panel-heading">
+        <div class="list-group-item clearfix">
+      <div class="col-xs-9">
+        <h4 class="title"> Contacts</h4>
+      </div>
+      <div class="col-xs-3">
+        <button class="btn btn-success">New Contact</button>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12 margin-top">
+          <cms-contact-item *ngFor="let singleContact of contacts" [contact]="singleContact"></cms-contact-item>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>  -->

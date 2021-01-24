@@ -4,7 +4,7 @@
             <div class="panel-heading" style="background-color: rgba(204, 203, 203, 0.945);">
                 <div class="clearfix">
                     <div class="pull-left">
-                        <h1 class="list-group-item-heading">Contact Name</h1>
+                        <h1 class="list-group-item-heading">{{ contact.name}}</h1>
                         <img src="" alt="image" class="img-responsive">
                     </div>
                     <div class="pull-right">
@@ -18,8 +18,8 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="panel-body">
-                <h5>Email:</h5>
-                <h5>Phone:</h5>
+                <h5>Email: {{contact.email}}</h5>
+                <h5>Phone: {{contact.phone}}</h5>
             </div>
         </div>
     </div>
