@@ -5,7 +5,7 @@ export class Contact{
    public email:    string;
    public phone:    string;
    public imageUrl: string;
-   group: Contact [] = []; // ndrro
+   public group: Contact [] = []; // ndrro
 
    constructor(id: number, name: string, email: string, phone: string, imageUrl: string, group: Contact[]){
     this.id       = id;

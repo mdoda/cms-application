@@ -1,3 +1,18 @@
-<p>
-  document-list works!
-</p>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="row pad-left-right">
+      <span class="pull-left title">Documents</span>
+      <a class="btn btn-success pull-right">Add Document</a>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="center-panel">
+      <cms-document-item
+      *ngFor="let currentDocument of documents"
+      [document]="currentDocument"
+      (click)="onSelectedDocument(currentDocument)"> // currentDocument in the loop is the currentDocument in the double quotes and which is binding to [doument] in document item through input
+    </cms-document-item>
+    </div>
+  </div>
+
+</div>

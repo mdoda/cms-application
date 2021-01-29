@@ -1,21 +1,8 @@
 <div class="row">
   <div class="col-md-5">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <div class="clearfix">
-          <div class="pull-left">
-            <h2 class="list-group-item-heading">Document</h2>
-          </div>
-          <button class="btn btn-success pull-right">New Document</button>
-        </div>
-      </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-md-5">
-            <p>Document works</p>
-          </div>
-        </div>
-      </div>
-    </div>
+       <cms-document-list (selectedDocumentEvent)="selectedDocument = $event" ></cms-document-list>
+  </div>
+  <div class="col-md-5">
+      <cms-document-detail [document]="selectedDocument" *ngIf="selectedDocument"></cms-document-detail>
   </div>
 </div>
