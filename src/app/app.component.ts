@@ -7,9 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 
-  selectedFeature = 'documents';
 
-  onNavigate(feature: string){
-    this.selectedFeature = feature;
-  }
 }

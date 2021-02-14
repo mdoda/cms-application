@@ -3,10 +3,35 @@
     <div class="panel-body">Panel Content</div>
   </div> -->
 
-<div class="panel panel-default">
   <div class="row">
     <div class="col-xs-12">
-      <!-- <div class="list-group-item clearfix"> -->
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="row pad-left-right">
+            <span class="pull-left title">Contact</span>
+            <a  [routerLink]= "['new']"class="btn btn-success pull-right">Add Contact</a>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12">
+              <cms-contact-item
+              *ngFor="let singleContact of contacts"
+              [contact]="singleContact"
+             ></cms-contact-item>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+<!-- <div class="panel panel-default">
+  <div class="row">
+    <div class="col-xs-12">
+   ///////////////sesht kjo   <div class="list-group-item clearfix">
       <div class="panel-heading" style="background-color: rgba(204, 203, 203, 0.945);">
         <div class="clearfix">
           <div class="pull-left">
@@ -27,7 +52,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 <!-- <div class="row">
   <div class="panel panel-default">

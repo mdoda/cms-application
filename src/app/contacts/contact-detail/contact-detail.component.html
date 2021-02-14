@@ -8,8 +8,13 @@
                         <img src="{{contact.imageUrl}}" alt="image" class="img-responsive">
                     </div>
                     <div class="pull-right">
-                        <button class="btn btn-primary" type="submit" style="margin: 5px;">edit</button>
-                        <button class="btn btn-danger" type="button">Delete</button>
+                        <a
+                           [routerLink]="['edit']"
+                           class="btn btn-primary"
+                           type="submit"
+                           style="margin: 5px;"
+                           >Edit</a>
+                        <a class="btn btn-danger" type="button" (click)="onDelete()">Delete</a>
                     </div>
                 </div>
             </div>
