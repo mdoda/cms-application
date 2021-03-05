@@ -2,6 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { MOCKDOCUMENTS } from './MOCKDOCUMENTS';
 import { Document } from './document.model';
 import { Subject } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 
 @Injectable({
@@ -18,13 +19,40 @@ export class DocumentService {
 
   maxDocumentId: number;
 
-constructor() {
+constructor(private http: HttpClient) {
   this.documents = MOCKDOCUMENTS;
    this.maxDocumentId = this.getMaxId();
 }
 
 getDocuments(){
-  return this.documents.slice();
+
+  this.http.get('https://wdd430-cms-2cfe4-default-rtdb.firebaseio.com/documents.json')
+  .subscribe(
+    //success function
+    (documents: Document[])=>{
+    this.documents = documents;
+
+    this.maxDocumentId = this.getMaxId();
+    this.documentChangedEvent.next(this.documents.slice());
+    },
+    // error function
+    (error: any) =>{
+      console.log(error);
+    }
+  )
+}
+
+storeDocuments() {
+  let documents = JSON.stringify(this.documents);
+  const headers = new HttpHeaders({'Content-Type': 'application/json'});
+  this.http.put('https://wdd430-cms-2cfe4-default-rtdb.firebaseio.com/documents.json',
+   documents,
+   {headers: headers})
+  .subscribe(
+    ()=>{
+      this.documentChangedEvent.next(this.documents.slice())
+    }
+  );
 }
 
 getDocument(id: string){
@@ -42,11 +70,12 @@ getDocument(id: string){
      return;
    }
    this.documents.splice(pos,1);
-   this.documentChangedEvent.next(this.documents.slice());
+
+   this.storeDocuments();
  }
 
  getMaxId(){
-  return Math.max.apply(Math, this.documents.map((contact: Document) => contact.id));
+  return Math.max.apply(Math, this.documents.map((document: Document) => document.id));
   }
 
 
@@ -59,7 +88,8 @@ getDocument(id: string){
     this.maxDocumentId++;
     newDocument.id = this.maxDocumentId.toString();
     this.documents.push(newDocument);
-    this.documentChangedEvent.next(this.documents.slice());
+
+    this.storeDocuments();
  }
 
  updateDocument(originalDocument: Document, newDocument: Document){
@@ -71,8 +101,11 @@ getDocument(id: string){
   if(pos < 0){
     return;
   }
+
   newDocument.id = originalDocument.id;
   this.documents[pos] = newDocument;
+
+  this.storeDocuments();
  }
 
 }

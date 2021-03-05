@@ -3,7 +3,6 @@ import { Contact } from '../contact.model';
 import { ContactService } from '../contact.service';
 import { Subscription } from 'rxjs';
 
-
 @Component({
   selector: 'cms-contact-list',
   templateUrl: './contact-list.component.html',
@@ -11,23 +10,27 @@ import { Subscription } from 'rxjs';
 })
 export class ContactListComponent implements OnInit, OnDestroy {
 
+  term: string;
   subscription: Subscription;
   contacts:  Contact [] = [];
 
   constructor(private contactService: ContactService) { }
 
   ngOnInit() {
-    this.contacts = this.contactService.getContacts();
      this.subscription = this.contactService.contactChangedEvent.subscribe(
       (contacts: Contact[]) => {
         this.contacts = contacts;
       }
     );
+
+    this.contactService.getContacts();
   }
 
   ngOnDestroy(){
     this.subscription.unsubscribe();
   }
 
-
+  search(value: string){
+    this.term = value;
+  }
 }

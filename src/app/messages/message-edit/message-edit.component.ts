@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Message } from '../message.model';
 import { MessageService } from '../message.service';
 
@@ -24,7 +24,7 @@ export class MessageEditComponent implements OnInit {
     const msgTextValue = this.msgText.nativeElement.value;
 
     const message = new Message(
-      '1',
+      '',
       subjectValue,
       msgTextValue,
       this.currentSender);
