@@ -66,7 +66,6 @@ getDocument(id: string){
   if(!originalDocument || !newDocument){
     return;
   }
-
   const pos = this.documents.indexOf(originalDocument);
 
   if(pos < 0){

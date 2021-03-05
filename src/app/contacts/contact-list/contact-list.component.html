@@ -18,6 +18,7 @@
               <cms-contact-item
               *ngFor="let singleContact of contacts"
               [contact]="singleContact"
+              dnd-draggable [dragEnabled]="true" [dragData]="singleContact" [dropZones]="['contactGroup']"
              ></cms-contact-item>
             </div>
           </div>
