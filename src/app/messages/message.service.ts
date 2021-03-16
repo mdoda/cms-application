@@ -16,6 +16,7 @@ messageChangedEvent = new Subject<Message[]>();
 private messages: Message [] = [];
 
 constructor(private http: HttpClient) {
+  this.maxMessageId = this.getMaxId();
 }
 
 // getMessages(){

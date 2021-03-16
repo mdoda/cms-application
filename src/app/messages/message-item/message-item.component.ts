@@ -20,9 +20,9 @@ export class MessageItemComponent implements OnInit {
     this.contactService.contactChangedEvent.subscribe(
       ()=>{
         const contact = this.contactService.getContact(this.message.sender);
-        this.messageSender = contact?.name;
+        this.messageSender = contact?.name; // vec kto tdyja nfillim
       }
-    );
+    )
 
   }
 
