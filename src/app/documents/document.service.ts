@@ -19,20 +19,33 @@ export class DocumentService {
   maxDocumentId: number;
 
 constructor(private http: HttpClient) {
-  //this.documents = MOCKDOCUMENTS;
-   this.maxDocumentId = this.getMaxId();
+   //this.maxDocumentId = this.getMaxId();
 }
 
+/****************************************************************
+ *
+ *  EMIT THE DOCUMENT CHANGED EVENT
+ *
+ ***************************************************************/
+sortAndSend(){
+  this.documentChangedEvent.next(this.documents.slice());
+  }
+
+/****************************************************************
+ *
+ *  GET LIST OF DOCUMENTS
+ *
+ ***************************************************************/
 getDocuments(){
 
-  this.http.get('https://wdd430-cms-2cfe4-default-rtdb.firebaseio.com/documents.json')
+  this.http.get<{message: string, documents: Document[]}>('http://localhost:3000/documents')
   .subscribe(
     //success function
-    (documents: Document[])=>{
-    this.documents = documents;
+    (responseData)=>{
+    this.documents = responseData.documents;
 
-    this.maxDocumentId = this.getMaxId();
-    this.documentChangedEvent.next(this.documents.slice());
+    // this.maxDocumentId = this.getMaxId();
+    this.sortAndSend();
     },
     // error function
     (error: any) =>{
@@ -40,71 +53,124 @@ getDocuments(){
     }
   )
 }
+// getDocuments(){
 
-storeDocuments() {
-  let documents = JSON.stringify(this.documents);
-  const headers = new HttpHeaders({'Content-Type': 'application/json'});
-  this.http.put('https://wdd430-cms-2cfe4-default-rtdb.firebaseio.com/documents.json',
-   documents,
-   {headers: headers})
-  .subscribe(
-    ()=>{
-      this.documentChangedEvent.next(this.documents.slice())
-    }
-  );
-}
+//   this.http.get('http://localhost:3000/documents')
+//   .subscribe(
+//     //success function
+//     (documents: Document[])=>{
+//     this.documents = documents;
 
-getDocument(id: string){
-  return this.documents.find((document) => document.id === id);
-}
+//     this.maxDocumentId = this.getMaxId();
+//     this.sortAndSend();
+//     },
+//     // error function
+//     (error: any) =>{
+//       console.log(error);
+//     }
+//   )
+// }
 
- deleteDocument(document: Document){
-   if(!document){
-     return;
-   }
 
-   const pos = this.documents.indexOf(document);
-
-   if(pos<0){
-     return;
-   }
-   this.documents.splice(pos,1);
-
-   this.storeDocuments();
- }
-
- getMaxId(){
-  return Math.max.apply(Math, this.documents.map((document: Document) => document.id));
+/****************************************************************
+ *
+ *  ADD DOCUMENT
+ *
+ ***************************************************************/
+addDocument(document: Document) {
+  if (!document) {
+    return;
   }
 
+  // make sure id of the new Document is empty
+  document.id = '';
 
- addDocument(newDocument: Document){
+  const headers = new HttpHeaders({'Content-Type': 'application/json'});
 
-    if(!newDocument){
+  // add to database
+  this.http.post<{ message: string, document: Document }>('http://localhost:3000/documents',
+    document,
+    { headers: headers })
+    .subscribe(
+      (responseData) => {
+        // add new document to documents
+        this.documents.push(responseData.document);
+        this.sortAndSend();
+      }
+    );
+}
+
+/****************************************************************
+ *
+ *  GET SINGLE DOCUMENT
+ *
+ ***************************************************************/
+getDocument(id: string){
+  return this.http.get<{message: string, document: Document}>('http://localhost:3000/documents/' + id);
+}
+
+/****************************************************************
+ *
+ *  DELETE DOCUMENT
+ *
+ ***************************************************************/
+deleteDocument(document: Document) {
+
+  if (!document) {
+    return;
+  }
+
+ const pos = this.documents.findIndex(d => d.id === document.id);
+
+  if (pos < 0) {
+    return;
+  }
+
+  // delete from database
+  this.http.delete('http://localhost:3000/documents/' + document.id)
+    .subscribe(
+      (response: Response) => {
+        this.documents.splice(pos, 1);
+        this.sortAndSend();
+      }
+    );
+}
+
+//  getMaxId(){
+//   return Math.max.apply(Math, this.documents.map((document: Document) => document.id));
+//   }
+
+/****************************************************************
+ *
+ *  UPDATE DOCUMENT
+ *
+ ***************************************************************/
+  updateDocument(originalDocument: Document, newDocument: Document) {
+    if (!originalDocument || !newDocument) {
       return;
     }
 
-    this.maxDocumentId++;
-    newDocument.id = this.maxDocumentId.toString();
-    this.documents.push(newDocument);
+    const pos = this.documents.findIndex(d => d.id === originalDocument.id);
 
-    this.storeDocuments();
- }
+    if (pos < 0) {
+      return;
+    }
 
- updateDocument(originalDocument: Document, newDocument: Document){
-  if(!originalDocument || !newDocument){
-    return;
+    // set the id of the new Document to the id of the old Document
+    newDocument.id = originalDocument.id;
+    newDocument._id = originalDocument._id;
+
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+    // update database
+    this.http.put('http://localhost:3000/documents/' + originalDocument.id,
+      newDocument, { headers: headers })
+      .subscribe(
+        (response: Response) => {
+          this.documents[pos] = newDocument;
+          this.sortAndSend();
+        }
+      );
   }
-  const pos = this.documents.indexOf(originalDocument);
-
-  if(pos < 0){
-    return;
-  }
-
-  newDocument.id = originalDocument.id;
-  this.documents[pos] = newDocument;
-
-  this.storeDocuments();
- }
 
 }

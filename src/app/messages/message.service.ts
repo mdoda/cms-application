@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MOCKMESSAGES } from './MOCKMESSAGES';
 import { Message } from './message.model';
 import { ContactService } from '../contacts/contact.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -19,21 +18,11 @@ constructor(private http: HttpClient) {
   this.maxMessageId = this.getMaxId();
 }
 
-// getMessages(){
-//   return this.messages.slice();
-// }
-storeMessages() {
-  let messages = JSON.stringify(this.messages);
-  const headers = new HttpHeaders({'Content-Type': 'application/json'});
-  this.http.put('https://wdd430-cms-2cfe4-default-rtdb.firebaseio.com/messages.json',
-   messages,
-   {headers: headers})
-  .subscribe(
-    ()=>{
-      this.messageChangedEvent.next(this.messages.slice())
-    }
-  );
+sortAndSend(){
+this.messageChangedEvent.next(this.messages.slice());
 }
+
+
 
 getMessage(id: string){
   return this.messages.find((message: Message) => message.id === id );
@@ -44,37 +33,45 @@ getMaxId(){
   }
 
 
-addMessage(newMessage: Message){
+addMessage(message: Message){
 
-
-  if(!newMessage){
+  if(!message){
     return;
   }
 
-  this.maxMessageId++;
-  newMessage.id = this.maxMessageId.toString();
-  this.messages.push(newMessage);
+  message.id = '';
 
-  this.storeMessages();
+  const headers = new HttpHeaders({'Content-Type': 'application/json'});
 
+  this.http.post<{response: string, newMessage: Message}>('http://localhost:3000/messages',
+  message,
+  {headers: headers})
+  .subscribe(
+    (responseData) =>{
+      message._id = responseData.newMessage._id;
+      message.id = responseData.newMessage.id;
+
+      this.messages.push(message);
+      this.sortAndSend();
+    }
+  );
 }
 
 getMessages(){
-
-  this.http.get('https://wdd430-cms-2cfe4-default-rtdb.firebaseio.com/messages.json')
+  this.http.get<{message: string, messages: Message[]}>('http://localhost:3000/messages')
   .subscribe(
     //success function
-    (messages: Message[])=>{
-    this.messages = messages;
-
-    this.maxMessageId = this.getMaxId();
-    this.messageChangedEvent.next(this.messages.slice());
+    (responseData)=>{
+    this.messages = responseData.messages;
+    this.sortAndSend();
+    // this.maxMessageId = this.getMaxId();
+    // this.messageChangedEvent.next(this.messages.slice());
     },
     // error function
     (error: any) =>{
       console.log(error);
     }
-  )
+  );
 }
 
 }

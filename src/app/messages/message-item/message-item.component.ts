@@ -12,18 +12,14 @@ import { ContactService } from 'src/app/contacts/contact.service';
 })
 export class MessageItemComponent implements OnInit {
   @Input() message: Message;
-  messageSender?: string;
-
+  messageSender: string;
   constructor(private contactService: ContactService) { }
 
   ngOnInit() {
-    this.contactService.contactChangedEvent.subscribe(
-      ()=>{
-        const contact = this.contactService.getContact(this.message.sender);
-        this.messageSender = contact?.name; // vec kto tdyja nfillim
-      }
-    )
-
+    this.contactService.getContact(this.message.sender.id)
+    .subscribe(contactData =>{
+      this.messageSender = contactData.contact?.name;
+    })
   }
 
 }
